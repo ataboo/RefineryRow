@@ -3,7 +3,7 @@ package com.atasoft.refineryrow;
 import com.atasoft.screens.GameLoopScreen;
 import com.badlogic.gdx.Game;
 
-public class RefineryRow extends Game
+public class RefineryAct extends Game
 {
 	GameLoopScreen loopScreen;
 

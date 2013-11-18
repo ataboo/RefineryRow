@@ -14,6 +14,6 @@ public class MainActivity extends AndroidApplication {
         cfg.useAccelerometer = false;
         cfg.useCompass = false;
         
-        initialize(new RefineryRow(), cfg);
+        initialize(new RefineryAct(), cfg);
     }
 }

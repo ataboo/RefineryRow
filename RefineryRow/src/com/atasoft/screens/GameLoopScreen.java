@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.*;
 
 public class GameLoopScreen implements Screen {
-	RefineryRow game;
+	RefineryAct game;
 	Texture texture;
 	OrthographicCamera cam;
 	SpriteBatch batch;	
@@ -16,7 +16,7 @@ public class GameLoopScreen implements Screen {
 	final Matrix4 matrix = new Matrix4();	
 	InputHandler inHandle;
 	
-	public GameLoopScreen (RefineryRow game) {
+	public GameLoopScreen (RefineryAct game) {
 		this.game = game;
 		
 
