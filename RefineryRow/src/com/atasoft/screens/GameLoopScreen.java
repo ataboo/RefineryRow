@@ -65,7 +65,7 @@ public class GameLoopScreen implements Screen {
 	final Vector3 intersection = new Vector3();
 	Sprite lastSelectedTile = null;
 	
-	private void checkTileTouched() {
+	private void checkTileTouched() {  //call relayed by inputhandler
 		if(Gdx.input.justTouched()) {
 			Ray pickRay = cam.getPickRay(Gdx.input.getX(), Gdx.input.getY());
 			Intersector.intersectRayPlane(pickRay, xzPlane, intersection);
@@ -84,7 +84,7 @@ public class GameLoopScreen implements Screen {
 	final Vector3 curr = new Vector3();
 	final Vector3 last = new Vector3(-1, -1, -1);
 	final Vector3 delta = new Vector3();
-	public boolean touchDragged (int x, int y, int pointer) {
+	public boolean touchDragged (int x, int y, int pointer) { //relayed by inputhandeler
 		Ray pickRay = cam.getPickRay(x, y);
 		Intersector.intersectRayPlane(pickRay, xzPlane, curr);
 
@@ -98,7 +98,7 @@ public class GameLoopScreen implements Screen {
 		return false;
 	}
 	
-	public boolean touchUp(int x, int y, int pointer, int button) {
+	public boolean touchUp(int x, int y, int pointer, int button) {  //call relayed by inputhandler
 		last.set(-1, -1, -1);
 		return false;
 	}
@@ -106,7 +106,6 @@ public class GameLoopScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -117,25 +116,22 @@ public class GameLoopScreen implements Screen {
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		texture.dispose();
 		
 	}
 
