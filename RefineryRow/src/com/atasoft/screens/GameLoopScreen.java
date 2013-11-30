@@ -41,7 +41,6 @@ public class GameLoopScreen implements Screen {
 		
 		
 	}
-	
 		
 	@Override
 	public void render(float delta) {
@@ -57,8 +56,21 @@ public class GameLoopScreen implements Screen {
 			}
 		}
 		batch.end();
+		
+		updateTimeToaster(delta);
 
 		checkTileTouched();
+	}
+	
+	float time = 0;
+	private static float WAIT_TIME = 1f;
+	
+	private void updateTimeToaster(float delta){  //Sounds like some sweet scifi
+		time += delta;
+		if (time >= WAIT_TIME) {
+			Gdx.app.log("RefRow Debug", String.format("x = %2f, y = %2f, z = %2f", cam.position.x, cam.position.y, cam.position.z));
+			time -= WAIT_TIME;
+	    }
 	}
 	
 	final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
@@ -75,6 +87,7 @@ public class GameLoopScreen implements Screen {
 				if(lastSelectedTile != null) lastSelectedTile.setColor(1, 1, 1, 1);
 				Sprite sprite = sprites[x][z];
 				sprite.setColor(1, 0, 0, 1);
+				Gdx.app.log("tile select", String.format("x: %2d z: %2d", x, z));
 				lastSelectedTile = sprite;
 			}
 		}
