@@ -12,14 +12,21 @@
 
 package com.atasoft.screens;
 
-import com.atasoft.refineryrow.*;
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.math.collision.*;
-import java.util.*;
-import src.com.atasoft.refineryrow.*;
+import com.atasoft.refineryrow.InputHandler;
+import com.atasoft.refineryrow.MapGenerator;
+import com.atasoft.refineryrow.RefineryAct;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Plane;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 
 public class GameLoopScreen implements Screen {
 	RefineryAct game;

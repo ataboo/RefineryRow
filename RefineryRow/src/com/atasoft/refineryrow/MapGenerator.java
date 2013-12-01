@@ -1,11 +1,11 @@
-package src.com.atasoft.refineryrow;
+package com.atasoft.refineryrow;
 
 import java.util.*;
 
 public class MapGenerator
 {
 	private double hVal = 500;
-	private static final double passes = 2;
+	//private static final double passes = 2;
 	private static final double seed = 1000;
 
 	public MapGenerator() {
