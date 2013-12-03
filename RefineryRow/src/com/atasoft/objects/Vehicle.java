@@ -1,4 +1,4 @@
-package src.com.atasoft.objects;
+package com.atasoft.objects;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;

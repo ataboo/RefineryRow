@@ -1,4 +1,4 @@
-package src.com.atasoft.refineryrow;
+package com.atasoft.refineryrow;
 
 
 
@@ -35,7 +35,7 @@ public class AtlasGen
 			for(int j = 0; j < frames[0]; j++) {
 				//atlas.addRegion(string, texture, x, y, wid, hei)
 				String sequence = Integer.toString(j + i * frames[1]);
-				atlas.addRegion("pickup," + sequence, texmex, i * frames[2], j * frames[2], frames[2], frames[2]);
+				atlas.addRegion("pickup," + sequence, texmex, j * frames[2], i * frames[2], frames[2], frames[2]);
 			}
 		}
 
@@ -46,11 +46,11 @@ public class AtlasGen
 		float roof = 0;
 		type = type.trim();
 		if(type == "pickup") roof = PICKUP_FRAMES[0] * PICKUP_FRAMES[1];
-		int spriteInd = Math.round(roof / (float)360 * angle);
-		Gdx.app.log("atlas", "type: " + type + "," + spriteInd);
+		int spriteInd = Math.round((roof - 1) / (float)360 * angle);
+		//Gdx.app.log("atlas", "type: " + type + "," + spriteInd);
 		//Gdx.app.log("atlas", "spriteInd: " + spriteInd);
+		Gdx.app.log("truckspin", String.format("Angle: %.4f, Sprite Index: %2d", angle, spriteInd));
 		Sprite retSprite = atlas.createSprite(type + "," + spriteInd);
-		if(retSprite == null) Gdx.app.log("atlas", "banana");
 		//retSprite.flip(false, true);
 		return retSprite;
 	}

@@ -6,8 +6,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.*;
-import src.com.atasoft.objects.*;
-import src.com.atasoft.refineryrow.*;
+import com.atasoft.objects.*;
 
 public class GameLoopScreen implements Screen {
 	RefineryAct game;
@@ -54,7 +53,7 @@ public class GameLoopScreen implements Screen {
 	
 	private void updateVehicles(float delta) {
 		// todo for vehicle list blah
-		float SPIN_SPEED = 1;
+		float SPIN_SPEED = 80;
 		Matrix4 uiMatrix = cam.combined.cpy();
 		uiMatrix.setToOrtho2D(0, 0, WIDTH, HEIGHT);
 		Sprite truckSprite = atlasGen.getVehBody("pickup", testTruck.heading);
@@ -67,6 +66,8 @@ public class GameLoopScreen implements Screen {
 		truckBatch.begin();
 		truckSprite.draw(truckBatch);
 		truckBatch.end();
+		
+		testTruck.setHeading(testTruck.heading + delta * SPIN_SPEED);
 		
 		//Gdx.app.log("atlas", String.format("heading %2f", testTruck.heading));
 	}
@@ -155,8 +156,8 @@ public class GameLoopScreen implements Screen {
 	private void updateTimeToaster(float delta){  //Sounds like some sweet scifi
 		time += delta;
 		if (time >= WAIT_TIME) {
-			Gdx.app.log("RefRow Debug", String.format("delta = %2f, heading = %2f", delta, testTruck.heading));
-			testTruck.setHeading(testTruck.heading + 3);
+			//Gdx.app.log("RefRow Debug", String.format("delta = %2f, heading = %2f", delta, testTruck.heading));
+			//testTruck.setHeading(testTruck.heading + 3);
 			time -= WAIT_TIME;
 	    }
 	}
