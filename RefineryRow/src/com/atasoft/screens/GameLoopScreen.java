@@ -1,41 +1,24 @@
-/*************************
-(x,z)      
-	  5,5
-
-5,15 10,10 15,5
-
-	 15,15
-
-**************************/
-
-
-
 package com.atasoft.screens;
 
-import com.atasoft.refineryrow.InputHandler;
-import com.atasoft.refineryrow.MapGenerator;
-import com.atasoft.refineryrow.RefineryAct;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Plane;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Ray;
+import com.atasoft.refineryrow.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.math.collision.*;
+import src.com.atasoft.objects.*;
+import src.com.atasoft.refineryrow.*;
 
 public class GameLoopScreen implements Screen {
 	RefineryAct game;
 	public static final int MAP_SIZE = 32;	
 	InputHandler inHandle;
+	AtlasGen atlasGen;
 	
 	public GameLoopScreen (RefineryAct game) {
 		this.game = game;
 		setupCam();
+		setupAtlas();
 		setupTiles();
 		
 		InputHandler inHandle = new InputHandler(this);
@@ -45,23 +28,47 @@ public class GameLoopScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
+		cam.update();
 		updateSpriteBatch(tileBatches[0], coffeeSprites);
 		updateSpriteBatch(tileBatches[1], appleSprites);
 		updateSpriteBatch(tileBatches[2], batSprites);
-		
+		updateVehicles(delta);
 		
 		updateTimeToaster(delta); // Logging Camera Position
 		//checkTileTouched();
 	}
-	
 	OrthographicCamera cam;
-	
+	int WIDTH;
+	int HEIGHT;
 	private void setupCam() {
-		cam = new OrthographicCamera(10, 10 * (Gdx.graphics.getHeight() / (float)Gdx.graphics.getWidth()));			
+		WIDTH = Gdx.graphics.getWidth();
+		HEIGHT = Gdx.graphics.getHeight();
+		
+		cam = new OrthographicCamera(10, 10 * (HEIGHT / (float)WIDTH));		
 		cam.position.set(MAP_SIZE / 2, 5, (MAP_SIZE / 2) + 5);
 		cam.direction.set(-1, -1, -1);
 		cam.near = 1;
 		cam.far = 40;		
+	}
+	
+	private void updateVehicles(float delta) {
+		// todo for vehicle list blah
+		float SPIN_SPEED = 1;
+		Matrix4 uiMatrix = cam.combined.cpy();
+		uiMatrix.setToOrtho2D(0, 0, WIDTH, HEIGHT);
+		Sprite truckSprite = atlasGen.getVehBody("pickup", testTruck.heading);
+		
+		truckSprite.setSize(testTruck.size.x, testTruck.size.y);
+		Vector3 wPos = new Vector3(testTruck.position.x, 0, testTruck.position.y);
+		cam.project(wPos);
+		truckSprite.setPosition(wPos.x - testTruck.size.x / 2, wPos.y - testTruck.size.y / 2);
+		truckBatch.setProjectionMatrix(uiMatrix);
+		truckBatch.begin();
+		truckSprite.draw(truckBatch);
+		truckBatch.end();
+		
+		//Gdx.app.log("atlas", String.format("heading %2f", testTruck.heading));
 	}
 	
 	public final static int TILE_COUNT = 3;
@@ -72,7 +79,6 @@ public class GameLoopScreen implements Screen {
 	final Matrix4 matrix = new Matrix4();	
 	final SpriteBatch[] tileBatches = new SpriteBatch[TILE_COUNT];
 	Texture[] tileTex = new Texture[TILE_COUNT];
-	
 	private void setupTiles() {
 		tileTex[0] = new Texture(Gdx.files.internal("data/coffeecup.png"));
 		tileTex[1] = new Texture(Gdx.files.internal("data/apple.png"));
@@ -90,7 +96,7 @@ public class GameLoopScreen implements Screen {
 		for(int i = 0; i < MAP_SIZE; i++) {
 			for(int j = 0; j < MAP_SIZE; j++){
 				double mapVal = mapArr[i][j] / 100;
-				Gdx.app.log("MapVal", String.format("%2f", mapVal));
+				//Gdx.app.log("MapVal", String.format("%2f", mapVal));
 				if(mapVal < 3) {
 					coffeeSprites[i][j] = setSprite(i, j, 0);
 				} else {
@@ -123,6 +129,17 @@ public class GameLoopScreen implements Screen {
 		return retArr;
 	}
 	
+	Vehicle testTruck;
+	SpriteBatch truckBatch;
+	private void setupAtlas() { // added test truck
+		atlasGen = new AtlasGen();
+		
+		testTruck = new Vehicle().new Pickup(new Vector2(16,16), 0);
+		truckBatch = new SpriteBatch();
+		
+		
+	}
+	
 	private Sprite setSprite(int x, int y, int texInd) {
 		Sprite retSprite = new Sprite(tileTex[texInd]);
 		retSprite.setPosition(x,y);
@@ -138,13 +155,13 @@ public class GameLoopScreen implements Screen {
 	private void updateTimeToaster(float delta){  //Sounds like some sweet scifi
 		time += delta;
 		if (time >= WAIT_TIME) {
-			//Gdx.app.log("RefRow Debug", String.format("x = %2f, y = %2f, z = %2f", cam.position.x, cam.position.y, cam.position.z));
+			Gdx.app.log("RefRow Debug", String.format("delta = %2f, heading = %2f", delta, testTruck.heading));
+			testTruck.setHeading(testTruck.heading + 3);
 			time -= WAIT_TIME;
 	    }
 	}
 	
-	private void updateSpriteBatch(SpriteBatch batch, Sprite[][] sprites) {
-		cam.update();		
+	private void updateSpriteBatch(SpriteBatch batch, Sprite[][] sprites) {		
 		batch.setProjectionMatrix(cam.combined);
 		batch.setTransformMatrix(matrix);
 		batch.begin();
@@ -234,6 +251,8 @@ public class GameLoopScreen implements Screen {
 		for(int i = 0; i < tileTex.length; i++){
 			tileTex[i].dispose();
 		}
+		
+		atlasGen.dispose();
 		
 	}
 
