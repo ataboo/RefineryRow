@@ -12,7 +12,7 @@ public class RenderMap
 	private MapGenerator mapGen;
 	private AtlasGen atlasGen;  //todo: ground textures to atlas
 	private CameraManager camManager;
-	public final static int[] MAP_SIZE = GameLoopScreen.MAP_SIZE;
+	public final static int[] MAP_SIZE = IsoScreen.MAP_SIZE;
 	public RenderMap(AtlasGen atlasGen, CameraManager camManager){
 		this.camManager = camManager;
 		this.atlasGen =  atlasGen;

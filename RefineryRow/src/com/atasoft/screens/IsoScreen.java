@@ -8,23 +8,29 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.*;
-import com.atasoft.helpers.*;
 
-public class GameLoopScreen implements Screen {
+public class IsoScreen implements Screen {
 	RefineryAct game;
 	public static final int[] MAP_SIZE = {32, 32};	
 	InputHandler inHandle;
 	AtlasGen atlasGen;
 	CameraManager camManager;
 	RenderMap renderMap;
+	VehicleManager vehicleManager;
+	ClickWatcher clickWatcher;
+	RenderVehicles renderVehicles;
 	
-	public GameLoopScreen (RefineryAct game) {
+	public IsoScreen (RefineryAct game) {
 		this.game = game;
 		camManager = new CameraManager(MAP_SIZE[0] / 2 + 5, MAP_SIZE[1] / 2 + 5);
 		atlasGen = new AtlasGen();
 		renderMap = new RenderMap(atlasGen, camManager);
+		renderVehicles = new RenderVehicles(atlasGen, camManager);
+		vehicleManager = new VehicleManager(renderVehicles);
+		clickWatcher = new ClickWatcher(vehicleManager, camManager);
+		
 		setupTestTruck();	
-		InputHandler inHandle = new InputHandler(this);
+		InputHandler inHandle = new InputHandler(this, clickWatcher);
 		Gdx.input.setInputProcessor(inHandle);
 	}
 		
@@ -34,45 +40,27 @@ public class GameLoopScreen implements Screen {
 		
 		camManager.update();
 		renderMap.update();
-		
-		updateVehicles(delta);
+		vehicleManager.update(delta);
 		//updateTimeToaster(delta); // Logging Camera Position
 		//checkTileTouched();
 	}
 	
-	
-	private void updateVehicles(float delta) {
-		// todo for vehicle list blah
-		float SPIN_SPEED = 80;
-		Sprite truckSprite = atlasGen.getVehBody("pickup", testTruck.heading);
+	private void setupTestTruck() {
+		for (int i = 0; i < 5; i++){
+			vehicleManager.addVehicle(vehicleManager.TYPE_PICKUP, 
+				new Vector2(10 + i * 2,16), 0);
+		}
 		
-		truckSprite.setSize(testTruck.size.x, testTruck.size.y);
-		
-		
-		Vector3 wPos = camManager.getScreenPos(new Vector3(testTruck.position.x, 0, testTruck.position.y));
-		truckSprite.setPosition(wPos.x - testTruck.size.x / 2, wPos.y - testTruck.size.y / 2);
-		truckBatch.setProjectionMatrix(camManager.getUIMatrix());
-		truckBatch.begin();
-		truckSprite.draw(truckBatch);
-		truckBatch.end();
-		
-		testTruck.setHeading(testTruck.heading + delta * SPIN_SPEED);
-		
-		//Gdx.app.log("atlas", String.format("heading %2f", testTruck.heading));
+		/*
+		if(tempVin != -1) {
+			///blahblahblah add logic
+		}
+		*/
 	}
 	
-	
-	
-	Vehicle testTruck;
-	SpriteBatch truckBatch;
-	private void setupTestTruck() { // added test truck
-		testTruck = new Vehicle().new Pickup(new Vector2(16,16), 0);
-		truckBatch = new SpriteBatch();	
-	}
-	
+
 	float time = 0;
 	private static float WAIT_TIME = 1f;
-	
 	private void updateTimeToaster(float delta){  //Sounds like some sweet scifi
 		time += delta;
 		if (time >= WAIT_TIME) {
@@ -103,29 +91,7 @@ public class GameLoopScreen implements Screen {
 	}
 	*/
 	
-	final Vector3 curr = new Vector3();
-	final Vector3 last = new Vector3(-1, -1, -1);
-	final Vector3 delta = new Vector3();
-	public boolean touchDragged (int x, int y, int pointer) { //relayed by inputhandeler
-		/*
-		Ray pickRay = cam.getPickRay(x, y);
-		Intersector.intersectRayPlane(pickRay, xzPlane, curr);
-
-		if(!(last.x == -1 && last.y == -1 && last.z == -1)) {
-			pickRay = cam.getPickRay(last.x, last.y);
-			Intersector.intersectRayPlane(pickRay, xzPlane, delta);			
-			delta.sub(curr);
-			cam.position.add(delta.x, delta.y, delta.z);
-		}
-		last.set(x, y, 0);
-		*/
-		return false;
-	}
 	
-	public boolean touchUp(int x, int y, int pointer, int button) {  //call relayed by inputhandler
-		//last.set(-1, -1, -1);
-		return false;
-	}
 	
 
 	@Override

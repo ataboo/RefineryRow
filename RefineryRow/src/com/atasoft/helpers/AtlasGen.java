@@ -49,7 +49,7 @@ public class AtlasGen
 		int spriteInd = Math.round((roof - 1) / (float)360 * angle);
 		//Gdx.app.log("atlas", "type: " + type + "," + spriteInd);
 		//Gdx.app.log("atlas", "spriteInd: " + spriteInd);
-		Gdx.app.log("truckspin", String.format("Angle: %.4f, Sprite Index: %2d", angle, spriteInd));
+		//Gdx.app.log("truckspin", String.format("Angle: %.4f, Sprite Index: %2d", angle, spriteInd));
 		Sprite retSprite = atlas.createSprite(type + "," + spriteInd);
 		//retSprite.flip(false, true);
 		return retSprite;

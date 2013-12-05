@@ -1,13 +1,15 @@
 package com.atasoft.helpers;
 
-import com.atasoft.screens.GameLoopScreen;
-import com.badlogic.gdx.InputProcessor;
+import com.atasoft.screens.*;
+import com.badlogic.gdx.*;
 
 public class InputHandler implements InputProcessor {
-	GameLoopScreen loopScreen;
+	IsoScreen loopScreen;
+	ClickWatcher clickWatcher;
 	
-	public InputHandler(GameLoopScreen loopScreen) {
+	public InputHandler(IsoScreen loopScreen, ClickWatcher clickWatcher) {
 		this.loopScreen = loopScreen;
+		this.clickWatcher = clickWatcher;
 	}
 	
 	@Override
@@ -30,19 +32,20 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
+		clickWatcher.clickCheck((int) screenX, (int) screenY);
+		Gdx.app.log("InputHandler", String.format("screenX: %2d, screenY: %2d", screenX, screenY));
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		loopScreen.touchUp(screenX, screenY, pointer, button);
+		clickWatcher.touchUp(screenX, screenY, pointer, button);
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		loopScreen.touchDragged(screenX, screenY, pointer);
+		clickWatcher.touchDragged(screenX, screenY, pointer);
 		return false;
 	}
 

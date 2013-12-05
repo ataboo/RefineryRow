@@ -1,16 +1,16 @@
 package com.atasoft.refineryrow;
 
-import com.atasoft.screens.GameLoopScreen;
+import com.atasoft.screens.*;
 import com.badlogic.gdx.Game;
 
 public class RefineryAct extends Game
 {
-	GameLoopScreen loopScreen;
+	IsoScreen isoScreen;
 
 	@Override 
 	public void create() {
-		loopScreen = new GameLoopScreen(this);
-        setScreen(loopScreen);  
+		isoScreen = new IsoScreen(this);
+        setScreen(isoScreen);
 	}
 	
 	@Override 
@@ -20,7 +20,6 @@ public class RefineryAct extends Game
 	
 	@Override
 	public void dispose() {
-		
+		super.dispose();
 	}
-
 }
