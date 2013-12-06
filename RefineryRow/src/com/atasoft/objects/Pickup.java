@@ -8,7 +8,7 @@ public class Pickup extends Vehicle {
 	
 	public Pickup(Vector2 spawnPos, float spawnBear){
 		this.size = new Vector2(300, 300); 
-		this.vehGridSize = new Vector2(0.75f, 75f);
+		this.vehGridSize = new Vector2(0.75f, 0.75f);
 		this.position = spawnPos;
 		this.heading = spawnBear;
 	}

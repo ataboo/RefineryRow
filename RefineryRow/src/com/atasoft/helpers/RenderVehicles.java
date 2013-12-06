@@ -7,9 +7,11 @@ import com.badlogic.gdx.math.*;
 public class RenderVehicles
 {
 	private SpriteBatch pickupBatch;
+	private Vector2 screenSize;
+	
 	private CameraManager camManager;
 	private AtlasGen atlasGen;
-	private Vector2 screenSize;
+	
 	
 	public RenderVehicles(AtlasGen atlasGen, CameraManager camManager) {
 		this.camManager = camManager;
