@@ -4,8 +4,6 @@ import com.atasoft.screens.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
-import com.atasoft.helpers.*;
 
 public class RenderMap
 {

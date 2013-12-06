@@ -1,6 +1,5 @@
 package com.atasoft.objects;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 
 public class Vehicle {
@@ -15,7 +14,7 @@ public class Vehicle {
 	private int vinNumber;
 	private int arrIndex;
 	private Vector3 sPos;
-	public static Vector2 vehGridSize;
+	public Vector2 vehGridSize;
 	
 	public void facePoint(Vector2 target){
 		heading = position.sub(target).angle();

@@ -1,9 +1,12 @@
 package com.atasoft.helpers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
+
 import java.util.*;
-import src.com.atasoft.objects.*;
+
+import com.atasoft.objects.*;
 
 public class RenderUI
 {
@@ -24,8 +27,8 @@ public class RenderUI
 		if(popOpen) drawPopButs();
 	}
 	
-	public static final Vector2 OFFSET_TOP = new Vector2(0, -200);
-	public static final Vector2 OFFSET_BOTTOM = new Vector2(0, 200);
+	public static final Vector2 OFFSET_TOP = new Vector2(0 - 64, 0 + 64);
+	public static final Vector2 OFFSET_BOTTOM = new Vector2(0 - 64, 0 - 192);
 	
 	private boolean popOpen = false;
 	private ArrayList<PopButton> popList;
@@ -34,12 +37,11 @@ public class RenderUI
 	private PopButton stopBut;
 	private PopButton repairBut;
 	private void setupPops(){
+		popList = new ArrayList<PopButton>();
 		uiBatch = new SpriteBatch();
-		PopButton dummy = new PopButton();
-		Vector2 zeroVector = new Vector2(0, 0);
-		moveBut = new PopButton(dummy.MOVE_ORDER, zeroVector);
-		stopBut = new PopButton(dummy.STOP, zeroVector);
-		repairBut = new PopButton(dummy.REPAIR, zeroVector);
+		moveBut = new PopButton(PopButton.MOVE_ORDER, Vector2.Zero);
+		stopBut = new PopButton(PopButton.STOP, Vector2.Zero);
+		repairBut = new PopButton(PopButton.REPAIR, Vector2.Zero);
 		popList.add(moveBut);
 		popList.add(stopBut);
 		popList.add(repairBut);
@@ -49,24 +51,28 @@ public class RenderUI
 		hidePops();
 		popOpen = true;
 		moveBut.setVisible(true);
-		moveBut.setPos((new Vector2(pos.cpy())).add(OFFSET_TOP));
+		Vector2 tempPos = pos.cpy();
+		Vector2 tempPos2 = pos.cpy();
+		moveBut.setPos(tempPos.add(OFFSET_TOP));
 		stopBut.setVisible(true);
-		stopBut.setPos((new Vector2(pos.cpy())).add(OFFSET_BOTTOM));
+		stopBut.setPos(tempPos2.add(OFFSET_BOTTOM));
 	}
 	
-	private void hidePops(){
+	public void hidePops(){
 		for(PopButton p: popList){
 			p.setVisible(false);
 		}	
 	}
 	
 	private void drawPopButs(){
-		Sprite butSprite;
+		//Sprite butSprite;
 		uiBatch.begin();
 		for(PopButton p: popList) {
 			if(p.isVisible()){
-				butSprite = atlasGen.getPopBut(p, BUT_NORM);
+				Sprite butSprite = atlasGen.getPopBut(p, BUT_NORM);
+				butSprite.setBounds(p.getPos().x, p.getPos().y, PopButton.BOX_SIZE.x, PopButton.BOX_SIZE.y);
 			    butSprite.draw(uiBatch);
+			    Gdx.app.log("RenderUI", String.format("%2d is visible", p.getFunction()));
 			}
 		}
 		uiBatch.end();

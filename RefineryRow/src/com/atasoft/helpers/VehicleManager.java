@@ -54,7 +54,7 @@ public class VehicleManager {
 	
 	public void update(float delta) {
 		for(Pickup p: pickups) {
-			if(p.vehType == TYPE_PICKUP) {
+			if(p.vehType == Pickup.TYPE_PICKUP) {
 				if(p.isSpinning()) truckSpin(delta, p);
 				renderVehicles.renderPickup(p);	
 			}

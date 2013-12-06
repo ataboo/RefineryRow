@@ -5,9 +5,7 @@ import com.atasoft.objects.*;
 import com.atasoft.refineryrow.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.math.collision.*;
 
 public class IsoScreen implements Screen {
 	RefineryAct game;
@@ -19,6 +17,7 @@ public class IsoScreen implements Screen {
 	VehicleManager vehicleManager;
 	ClickWatcher clickWatcher;
 	RenderVehicles renderVehicles;
+	RenderUI renderUI;
 	
 	public IsoScreen (RefineryAct game) {
 		this.game = game;
@@ -26,8 +25,9 @@ public class IsoScreen implements Screen {
 		atlasGen = new AtlasGen();
 		renderMap = new RenderMap(atlasGen, camManager);
 		renderVehicles = new RenderVehicles(atlasGen, camManager);
+		renderUI = new RenderUI(camManager, atlasGen);
 		vehicleManager = new VehicleManager(renderVehicles);
-		clickWatcher = new ClickWatcher(vehicleManager, camManager);
+		clickWatcher = new ClickWatcher(vehicleManager, camManager, renderUI);
 		
 		setupTestTruck();	
 		InputHandler inHandle = new InputHandler(this, clickWatcher);
@@ -41,13 +41,14 @@ public class IsoScreen implements Screen {
 		camManager.update();
 		renderMap.update();
 		vehicleManager.update(delta);
+		renderUI.render();
 		//updateTimeToaster(delta); // Logging Camera Position
 		//checkTileTouched();
 	}
 	
 	private void setupTestTruck() {
 		for (int i = 0; i < 5; i++){
-			vehicleManager.addVehicle(vehicleManager.TYPE_PICKUP, 
+			vehicleManager.addVehicle(Vehicle.TYPE_PICKUP, 
 				new Vector2(10 + i * 2,16), 0);
 		}
 		
@@ -59,6 +60,7 @@ public class IsoScreen implements Screen {
 	}
 	
 
+	/*
 	float time = 0;
 	private static float WAIT_TIME = 1f;
 	private void updateTimeToaster(float delta){  //Sounds like some sweet scifi
@@ -68,6 +70,7 @@ public class IsoScreen implements Screen {
 			time -= WAIT_TIME;
 	    }
 	}
+	*/
 	
 	/*
 	final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);

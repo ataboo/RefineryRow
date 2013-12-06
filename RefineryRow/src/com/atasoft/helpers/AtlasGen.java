@@ -5,7 +5,7 @@ package com.atasoft.helpers;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
-import src.com.atasoft.objects.*;
+import com.atasoft.objects.*;
 
 public class AtlasGen
  {
@@ -15,8 +15,8 @@ public class AtlasGen
 	private static final String PICKUP_TEX = "data/pickup/truckspin.png";
 	private static final int[] PICKUP_FRAMES = {8, 8, 128};
 	
-	private static final String BUT_TEX = "data/ui/buttons.png";
-	private static final int[] BUT_FRAMES = {3, 12, 128};
+	private static final String BUT_TEX = "data/ui/popbut.png";
+	private static final int[] BUT_FRAMES = {2, 2, 128};
 	
 	public AtlasGen() {
 		getTextures(new String[]{PICKUP_TEX, BUT_TEX});
@@ -49,10 +49,9 @@ public class AtlasGen
 	
 	private void addButRegions(Texture texMex) {
 		// popbuttons = first 4 columns by first (LAST_TYPE) rows
-		PopButton dummy = new PopButton();
-		Vector2 size = dummy.BOX_SIZE;
-		for(int i = 0; i < dummy.LAST_TYPE; i++) {
-			for(int j = 0; j < 4; j++) {
+		Vector2 size = PopButton.BOX_SIZE;
+		for(int i = 0; i < 2; i++) {
+			for(int j = 0; j < 2; j++) {
 			    atlas.addRegion("pop" + Integer.toString(i) + "," + j, 
 				    texMex,
 					j * (int) size.x, i * (int) size.y, 

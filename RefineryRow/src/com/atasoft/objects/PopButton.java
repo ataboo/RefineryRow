@@ -1,36 +1,26 @@
-package src.com.atasoft.objects;
+package com.atasoft.objects;
 
-import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 
 public class PopButton
 {
-	public static final int DUMMY = 0;
-	public static final int MOVE_ORDER = 1;
-	public static final int STOP = 2;
-	public static final int REPAIR = 3;
-	public static final int LAST_TYPE = 3; //Highest int (REPAIR)
+	public static final int MOVE_ORDER = 0;
+	public static final int STOP = 1;
+	public static final int REPAIR = 2;
+	public static final int LAST_TYPE = 2; //Highest int (REPAIR)
 	
-	public static final Vector2 BOX_SIZE = new Vector2(400, 400);		
+	public static final Vector2 BOX_SIZE = new Vector2(128, 128);		
 	private String atlasName;
 	private Vector2 position;
 	private int function;
 	private boolean visible = false;
 	private Sprite sprite;
 	
-	public PopButton() {  //called to get a dummy to get some values
-		this.position = new Vector2(0,0);
-		this.function = DUMMY;
-	}
 	public PopButton(int function, Vector2 pos){
 		this.position = pos;
 		this.function = function;
 		switch(function) {
-			case DUMMY:
-				Gdx.app.log("PopButton.java", "This Popbutton is just a dummy... oops.");
-				this.atlasName = "pop" + Integer.toString(DUMMY);
-				break;
 			case MOVE_ORDER:
 				this.atlasName = "pop" + Integer.toString(MOVE_ORDER);
 				break;
@@ -41,7 +31,7 @@ public class PopButton
 				this.atlasName = "pop" + Integer.toString(REPAIR);
 				break;
 			default:
-				this.atlasName = "pop" + Integer.toString(DUMMY);
+				this.atlasName = "pop" + Integer.toString(MOVE_ORDER);
 				break;
 		}
 	}
@@ -49,6 +39,10 @@ public class PopButton
 	public void setPos(Vector2 pos) {
 		this.position = pos;
 		return;
+	}
+	
+	public Vector2 getPos() {
+		return position;
 	}
 
 	public int getFunction() {
