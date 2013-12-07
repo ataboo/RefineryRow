@@ -11,5 +11,9 @@ public class Pickup extends Vehicle {
 		this.position = spawnPos;
 		this.heading = spawnBear;
 	}
+	
+	public Vector2 getHalfSize() {
+		return Vector2.Zero;
+	}
 }
 

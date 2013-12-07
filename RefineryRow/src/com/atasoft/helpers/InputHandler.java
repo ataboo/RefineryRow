@@ -32,8 +32,8 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		clickWatcher.clickCheck((int) screenX, (int) screenY);
-		Gdx.app.log("InputHandler", String.format("screenX: %2d, screenY: %2d", screenX, screenY));
+		clickWatcher.clickCheck(screenX, screenY);
+		//Gdx.app.log("InputHandler", String.format("screenX: %2d, screenY: %2d", screenX, screenY));
 		return false;
 	}
 

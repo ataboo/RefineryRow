@@ -27,8 +27,8 @@ public class RenderUI
 		if(popOpen) drawPopButs();
 	}
 	
-	public static final Vector2 OFFSET_TOP = new Vector2(0 - 64, 0 + 64);
-	public static final Vector2 OFFSET_BOTTOM = new Vector2(0 - 64, 0 - 192);
+	public static final Vector2 OFFSET_TOP = new Vector2(0, 0 + 96);
+	public static final Vector2 OFFSET_BOTTOM = new Vector2(0, 0 - 96);
 	
 	private boolean popOpen = false;
 	private ArrayList<PopButton> popList;
@@ -36,6 +36,12 @@ public class RenderUI
 	private PopButton moveBut;
 	private PopButton stopBut;
 	private PopButton repairBut;
+	private PopButton activePop;
+	private Vector2 highlightPos;
+	
+	private Vector2 topPos;
+	private Vector2 bottomPos;
+	
 	private void setupPops(){
 		popList = new ArrayList<PopButton>();
 		uiBatch = new SpriteBatch();
@@ -48,17 +54,21 @@ public class RenderUI
 	}
 	
 	public void popPickup(Vector2 pos) {
-		hidePops();
 		popOpen = true;
 		moveBut.setVisible(true);
-		Vector2 tempPos = pos.cpy();
-		Vector2 tempPos2 = pos.cpy();
-		moveBut.setPos(tempPos.add(OFFSET_TOP));
+		topPos = pos.cpy();
+		topPos.sub(new Vector2(PopButton.BOX_SIZE.x / 2, PopButton.BOX_SIZE.y / 2));
+		bottomPos = topPos.cpy();
+		topPos.add(OFFSET_TOP);
+		bottomPos.add(OFFSET_BOTTOM);
+		moveBut.setPos(topPos);
 		stopBut.setVisible(true);
-		stopBut.setPos(tempPos2.add(OFFSET_BOTTOM));
+		stopBut.setPos(bottomPos);
 	}
 	
-	public void hidePops(){
+	public void runPop(){
+		//if(activePop != null) activePop.run();
+		
 		for(PopButton p: popList){
 			p.setVisible(false);
 		}	
@@ -66,16 +76,35 @@ public class RenderUI
 	
 	private void drawPopButs(){
 		//Sprite butSprite;
+		activePop = null;
 		uiBatch.begin();
 		for(PopButton p: popList) {
 			if(p.isVisible()){
 				Sprite butSprite = atlasGen.getPopBut(p, BUT_NORM);
-				butSprite.setBounds(p.getPos().x, p.getPos().y, PopButton.BOX_SIZE.x, PopButton.BOX_SIZE.y);
-			    butSprite.draw(uiBatch);
+				butSprite.setColor(1,1,1,0.6f);
+				Vector2 tempPos = p.getPos();
+				if(highlightPos != null) {
+					Rectangle tempRect = new Rectangle(tempPos.x, tempPos.y, PopButton.BOX_SIZE.x, PopButton.BOX_SIZE.y);
+					if (tempRect.contains(highlightPos)) {
+						butSprite = atlasGen.getPopBut(p, BUT_PUSH);
+						activePop = p;
+					}
+				}
+				
+				butSprite.setBounds(tempPos.x, tempPos.y, PopButton.BOX_SIZE.x, PopButton.BOX_SIZE.y); 
+				butSprite.draw(uiBatch);
 			    Gdx.app.log("RenderUI", String.format("%2d is visible", p.getFunction()));
 			}
 		}
 		uiBatch.end();
+	}
+	
+	public void highlightPop (int x, int y) {
+		highlightPos = new Vector2(x, y);
+	}
+	
+	public void highlightPop (boolean killPoint) {
+		highlightPos = null;
 	}
 	
 	

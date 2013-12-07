@@ -42,6 +42,7 @@ public class IsoScreen implements Screen {
 		renderMap.update();
 		vehicleManager.update(delta);
 		renderUI.render();
+		clickWatcher.update(delta);
 		//updateTimeToaster(delta); // Logging Camera Position
 		//checkTileTouched();
 	}
