@@ -12,14 +12,16 @@ public class RenderUI
 {
 	private CameraManager camManager;
 	private AtlasGen atlasGen;
+	private VehicleManager vehicleManager;
 	
 	public static final int BUT_NORM = 0;
 	public static final int BUT_PUSH = 1;
 	private SpriteBatch uiBatch;
 	
-	public RenderUI(CameraManager camManager, AtlasGen atlasGen){
+	public RenderUI(CameraManager camManager, AtlasGen atlasGen, VehicleManager vehicleManager){
 		this.camManager = camManager;
 		this.atlasGen = atlasGen;
+		this.vehicleManager = vehicleManager;
 		setupPops();
 	}
 	
@@ -53,25 +55,28 @@ public class RenderUI
 		popList.add(repairBut);
 	}
 	
-	public void popPickup(Vector2 pos) {
+	public void popVehicle(Vector2 pos, Vehicle v) {
 		popOpen = true;
-		moveBut.setVisible(true);
 		topPos = pos.cpy();
 		topPos.sub(new Vector2(PopButton.BOX_SIZE.x / 2, PopButton.BOX_SIZE.y / 2));
 		bottomPos = topPos.cpy();
 		topPos.add(OFFSET_TOP);
 		bottomPos.add(OFFSET_BOTTOM);
+		
+		moveBut.setVisible(true);
+		moveBut.setParent(vehicleManager);
 		moveBut.setPos(topPos);
 		stopBut.setVisible(true);
+		stopBut.setParent(vehicleManager);
 		stopBut.setPos(bottomPos);
 	}
 	
-	public void runPop(){
-		//if(activePop != null) activePop.run();
-		
+	public void runPop(int x, int y){
+		if(activePop != null) activePop.run((float) x, (float) y);
 		for(PopButton p: popList){
 			p.setVisible(false);
 		}	
+		highlightPop(true);
 	}
 	
 	private void drawPopButs(){
@@ -105,6 +110,10 @@ public class RenderUI
 	
 	public void highlightPop (boolean killPoint) {
 		highlightPos = null;
+	}
+	
+	public void dispose(){
+		uiBatch.dispose();
 	}
 	
 	

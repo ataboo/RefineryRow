@@ -2,10 +2,11 @@ package com.atasoft.helpers;
 
 
 
+import com.atasoft.objects.*;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
-import com.atasoft.objects.*;
 
 public class AtlasGen
  {
@@ -65,6 +66,7 @@ public class AtlasGen
 	public Sprite getVehBody(String type, float angle) {
 		float roof = 0;
 		type = type.trim();
+		angle = cageEuler(angle);
 		if(type == "pickup") roof = PICKUP_FRAMES[0] * PICKUP_FRAMES[1];
 		int spriteInd = Math.round((roof - 1) / (float)360 * angle);
 		//Gdx.app.log("atlas", "type: " + type + "," + spriteInd);
@@ -72,6 +74,34 @@ public class AtlasGen
 		//Gdx.app.log("truckspin", String.format("Angle: %.4f, Sprite Index: %2d", angle, spriteInd));
 		Sprite retSprite = atlas.createSprite(type + "," + spriteInd);
 		return retSprite;
+	}
+	//Takes a float and returns a proper float angle (0, 360)
+	public static float cageEuler(float angle) {
+		int intAngle = (int) angle;
+		float remain = angle - intAngle;
+		intAngle = intAngle % 360;
+		if(intAngle < 0) {
+			intAngle += 360;
+			remain *= -1;
+		}
+		
+		//Gdx.app.log("atlasGen/cageEuler", String.format("Turned angle %.2f", angle));
+		angle = (float) intAngle + remain;
+		//Gdx.app.log("atlasGen/cageEuler", String.format("Into %.2f", angle));
+		return angle;
+	}
+	
+	public static float deltaEuler(float alpha, float beta) {
+		float dif;
+		alpha = cageEuler(alpha);
+		beta = cageEuler(beta);
+		dif = Math.abs(alpha - beta);
+		if(dif > 180) {
+			dif = 360 - dif;
+		}
+		
+		//Gdx.app.log("AtlasGen/deltaEuler", String.format("The difference between %.2f and %.2f is %.2f.", alpha, beta, dif));
+		return dif;
 	}
 	
 	public Sprite getPopBut(PopButton p, int state) {

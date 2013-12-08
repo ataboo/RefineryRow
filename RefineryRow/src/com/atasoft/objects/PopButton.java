@@ -1,5 +1,6 @@
 package com.atasoft.objects;
 
+import com.atasoft.helpers.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 
@@ -55,6 +56,23 @@ public class PopButton
 	
 	public boolean isVisible() {
 		return visible;
+	}
+	
+	VehicleManager parent;
+	public void setParent(VehicleManager v) {
+		this.parent = v;
+	}
+	
+	public void run(float x, float z) {
+		switch(function) {
+			case MOVE_ORDER:
+				parent.moveSelected(x, z);
+				break;
+			case STOP:
+				parent.selectVehicle(null);
+				break;
+			
+		}
 	}
 	
 	public void setSprite(Sprite sprite){

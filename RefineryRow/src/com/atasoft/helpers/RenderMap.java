@@ -110,6 +110,10 @@ public class RenderMap
 		for(Texture i: tileTex) {
 			i.dispose();
 		}
+		for(SpriteBatch s: tileBatches){
+			s.dispose();
+		}
+		
 	}
 	
 	

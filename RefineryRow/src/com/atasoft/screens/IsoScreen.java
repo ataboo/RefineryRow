@@ -25,8 +25,8 @@ public class IsoScreen implements Screen {
 		atlasGen = new AtlasGen();
 		renderMap = new RenderMap(atlasGen, camManager);
 		renderVehicles = new RenderVehicles(atlasGen, camManager);
-		renderUI = new RenderUI(camManager, atlasGen);
 		vehicleManager = new VehicleManager(renderVehicles);
+		renderUI = new RenderUI(camManager, atlasGen, vehicleManager);
 		clickWatcher = new ClickWatcher(vehicleManager, camManager, renderUI);
 		
 		setupTestTruck();	
