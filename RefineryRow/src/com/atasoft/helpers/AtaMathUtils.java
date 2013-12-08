@@ -1,4 +1,4 @@
-package src.com.atasoft.helpers;
+package com.atasoft.helpers;
 
 import com.badlogic.gdx.*;
 

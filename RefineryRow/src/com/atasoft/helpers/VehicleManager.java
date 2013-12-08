@@ -4,7 +4,7 @@ import com.atasoft.objects.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
-import src.com.atasoft.helpers.*;
+import com.atasoft.helpers.*;
 
 public class VehicleManager {
 	public static final int TYPE_PICKUP = 0;

@@ -1,7 +1,7 @@
 package com.atasoft.objects;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.*;
-import src.com.atasoft.helpers.*;
+import com.atasoft.helpers.*;
 
 public class Vehicle {
 	public static final int TYPE_PICKUP = 0;
