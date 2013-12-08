@@ -133,19 +133,24 @@ public class VehicleManager {
 		
 		
 		float newHead = rotateTowards(v.heading, bearVect.angle(), delta * Pickup.TURN_RATE);
+		float targSpeed = Pickup.SLOW_SPEED;
 		
-		if (distSq < Pickup.CLOSE_DISTSQ) {
+		if (v.speed < 0.01 && distSq < Pickup.CLOSE_DISTSQ) {
 			v.speed = 0;
 			v.isMoving = false;
 			return;
 		}
 		if (AtlasGen.deltaEuler(newHead, v.heading) < AtlasGen.deltaEuler(bearVect.angle(), v.heading) ||
 			distSq < Pickup.SLOW_DISTSQ) {
-			v.speed = AtaMathUtils.derpLerp(v.speed, Pickup.SLOW_SPEED, delta * Pickup.ACCEL);
+			targSpeed = Pickup.SLOW_SPEED;
+			if(distSq < Pickup.CLOSE_DISTSQ) targSpeed = 0;
+			
 		} else {
-		    v.speed = AtaMathUtils.derpLerp(v.speed, Pickup.FAST_SPEED, delta * Pickup.ACCEL);
+		    targSpeed = Pickup.FAST_SPEED;
 			newHead = v.heading;
 		}
+		
+		v.speed = AtaMathUtils.derpLerp(v.speed, targSpeed, delta * Pickup.ACCEL);
 		
 		Vector2 newPos = pos.cpy();
 		newPos = moveTowards(newPos, headVect, delta * v.speed);

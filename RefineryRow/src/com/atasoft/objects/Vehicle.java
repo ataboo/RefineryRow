@@ -20,6 +20,7 @@ public class Vehicle {
 	private Vector3 sPos;
 	public Vector2 vehGridSize;
 	private boolean isSelected = false;
+	
 	public float speed = 0;
 	public Vector2 targetPos;
 	public boolean isMoving;
