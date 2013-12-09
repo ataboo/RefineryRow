@@ -7,32 +7,25 @@ public class Vehicle {
 	public static final int TYPE_PICKUP = 0;
 	//yada yada
 	
+	//----------changed externally
 	public int vehType;
-	public float TURN_RATE;
-	public float CLOSE_HEAD;
-	public float CLOSE_DIST;
-	public Texture bodyTex;
 	public Vector2 position;  //should change a bunch of these to methods
 	public float heading;
 	public Vector2 size;
-	private int vinNumber;
-	private int arrIndex;
-	private Vector3 sPos;
 	public Vector2 vehGridSize;
-	private boolean isSelected = false;
-	
 	public float speed = 0;
 	public Vector2 targetPos;
 	public boolean isMoving;
 	
+	//----------getter/setter action
+	private boolean isSelected = false;
+	private int vinNumber;
+	private int arrIndex;
+	private Vector3 sPos;
+	
 	public void setPosHead(Vector2 newPos, float newHeading) {
 		this.heading = AtaMathUtils.cageEuler(newHeading);
 		this.position = newPos;
-	}
-	
-	public void facePoint(Vector2 target){
-		heading = position.sub(target).angle();
-		return;
 	}
 	
 	public void setVinNumber(int vin) {
@@ -104,6 +97,18 @@ public class Vehicle {
 	
 	public void select(boolean select) {
 		this.isSelected = select;
+	}
+	
+	public float[] getVehStats(int type) {
+		float[] vStats;
+		switch(type){
+			case TYPE_PICKUP:
+				vStats = Pickup.getVehStats();
+				break;
+			default:
+				vStats = null;
+		}
+	return vStats;
 	}
 }
 	

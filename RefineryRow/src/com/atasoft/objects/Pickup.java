@@ -3,6 +3,7 @@ package com.atasoft.objects;
 import com.badlogic.gdx.math.*;
 
 public class Pickup extends Vehicle {
+
 	//acceleration rate
 	public final static float ACCEL = 2.5f;
 	//rate of turn
@@ -26,6 +27,11 @@ public class Pickup extends Vehicle {
 		this.position = spawnPos;
 		this.heading = spawnBear;
 		this.vehType = TYPE_PICKUP;
+	}
+	
+	public static float[] getVehStats() {
+		float[] vStats = {ACCEL, TURN_RATE, FAST_SPEED, SLOW_SPEED, CLOSE_DISTSQ, SLOW_DISTSQ, TURN_THRESH, TURN_SLOW_MIN};
+		return vStats;
 	}
 }
 

@@ -11,15 +11,16 @@ public class VehicleManager {
 	// digger, blah...
 	
 	private RenderVehicles renderVehicles;
-	private Array<Pickup> pickups;
+	private Array<Vehicle> vehicles;
 	private int vinCount;
 	private Vector2 screenSize;
 	private Vehicle selectedV;
+	private float[] vStats;
 	
 	public VehicleManager(RenderVehicles renderVehicles) {
 		this.renderVehicles = renderVehicles;
 		this.screenSize = renderVehicles.getScreenSize();
-		pickups = new Array<Pickup>();
+		vehicles = new Array<Vehicle>();
 		vinCount = 0;
 	}
 	
@@ -34,11 +35,11 @@ public class VehicleManager {
 		return 0;
 	}
 	
-	public boolean removePickup(int vinNumber) {
-		for(Vehicle p: pickups) {
-			if (p.getVinNumber() == vinNumber) { 
-				pickups.removeIndex(p.getArrIndex());
-				p.die();
+	public boolean removeVehicle(int vinNumber) {
+		for(Vehicle v: vehicles) {
+			if (v.getVinNumber() == vinNumber) { 
+				vehicles.removeIndex(v.getArrIndex());
+				v.die();
 				return true;
 			}
 		}
@@ -47,7 +48,7 @@ public class VehicleManager {
 	
 	private int makePickup(Vector2 pos, float bearing) {
 		Pickup pickup = new Pickup(pos, bearing);
-		pickups.add(pickup);
+		vehicles.add(pickup);
 		pickup.setArrIndex(0);
 		pickup.setVinNumber(vinCount);
 		vinCount++;
@@ -55,27 +56,28 @@ public class VehicleManager {
 	}
 	
 	public void update(float delta) {
-		for(Pickup p: pickups) {
-			if(p.vehType == Pickup.TYPE_PICKUP) {
-				//if(p.isSpinning()) truckSpin(delta, p);
-				movePickup(p, delta);
-				renderVehicles.renderPickup(p);	
+		for(Vehicle v: vehicles) {
+			if(v.vehType == Vehicle.TYPE_PICKUP) {
+				if(v.isMoving) moveVehicle(v, delta);
+				renderVehicles.renderPickup((Pickup) v);	
 			}
 		}
 	}
 
+	/*
 	//move me to movement manager or pickup class	
 	private void truckSpin(float delta, Pickup truck) {
 		float SPIN_SPEED = 80;
 		truck.heading = AtaMathUtils.cageEuler(truck.heading + delta * SPIN_SPEED);
 		//Gdx.app.log("atlas", String.format("heading %2f", testTruck.heading));
 	}
+	*/
 	
 	public Vehicle checkOverlap(Vector2 gridClick) {
-		for(Pickup p: pickups) {
+		for(Pickup v: vehicles) {
 			if(overlapVehicle(gridClick, 
-			    p.getGridPos(), 
-				p.getGridSize())) return p;
+			    v.getGridPos(), 
+				v.getGridSize())) return v;
 		}
 		return null;
 	}
@@ -110,13 +112,6 @@ public class VehicleManager {
 		return selectedV;
 	}
 	
-	private void movePickup(Pickup p, float delta) {
-		if(p.isMoving) {
-				//pathfinder will update target pos eventually 
-				moveVehicle(p, delta);
-		}
-	}
-	
 	public void moveSelected(float x, float y){
 		selectedV.targetPos = new Vector2(x, y);
 		selectedV.isMoving = true;
@@ -127,30 +122,39 @@ public class VehicleManager {
 		Vector2 pos = v.position;
 		Vector2 headVect = new Vector2(1, 0).rotate(v.heading); //counterclockwise default
 		Vector2 bearVect = targetCopy.sub(pos);
+		
+		vStats = v.getVehStats(v.vehType);
+		//from Pickup:
+		//float[] vStats = {ACCEL, TURN_RATE, FAST_SPEED, SLOW_SPEED, CLOSE_DISTSQ, SLOW_DISTSQ, TURN_THRESH, TURN_SLOW_MIN};
+		float[] speeds = {0f, vStats[3], vStats[2]};
+		float[] distThresh = {vStats[4], vStats[5]};
+		float turnRate = vStats[1];
+		float accel = vStats[0];
+		
 		float distSq = bearVect.len2();
 		bearVect.nor();
 		Gdx.app.log("vehManager", String.format("bearVect: %.2f, %.2f", bearVect.x, bearVect.y));
 		
 		
-		float newHead = rotateTowards(v.heading, bearVect.angle(), delta * Pickup.TURN_RATE);
-		float targSpeed = Pickup.SLOW_SPEED;
+		float newHead = rotateTowards(v.heading, bearVect.angle(), delta * turnRate);
+		float targSpeed = speeds[1];
 		
-		if (v.speed < 0.01 && distSq < Pickup.CLOSE_DISTSQ) {
+		if (v.speed < 0.01 && distSq < distThresh[0]) {
 			v.speed = 0;
 			v.isMoving = false;
 			return;
 		}
 		if (AtlasGen.deltaEuler(newHead, v.heading) < AtlasGen.deltaEuler(bearVect.angle(), v.heading) ||
-			distSq < Pickup.SLOW_DISTSQ) {
-			targSpeed = Pickup.SLOW_SPEED;
-			if(distSq < Pickup.CLOSE_DISTSQ) targSpeed = 0;
+			distSq < distThresh[1]) {
+			targSpeed = speeds[1];
+			if(distSq < distThresh[0]) targSpeed = speeds[0];
 			
 		} else {
-		    targSpeed = Pickup.FAST_SPEED;
+		    targSpeed = speeds[2];
 			newHead = v.heading;
 		}
 		
-		v.speed = AtaMathUtils.derpLerp(v.speed, targSpeed, delta * Pickup.ACCEL);
+		v.speed = AtaMathUtils.derpLerp(v.speed, targSpeed, delta * accel);
 		
 		Vector2 newPos = pos.cpy();
 		newPos = moveTowards(newPos, headVect, delta * v.speed);
