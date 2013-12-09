@@ -21,7 +21,7 @@ public class Pickup extends Vehicle {
 	//If bearing is greater than this slow for turn
 	public final static float TURN_SLOW_MIN = 10;
 	
-	public Pickup(Vector2 spawnPos, float spawnBear){
+	public Pickup(Vector2 spawnPos, float spawnBear){	
 		this.size = new Vector2(300, 300); 
 		this.vehGridSize = new Vector2(0.75f, 0.75f);
 		this.position = spawnPos;

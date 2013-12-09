@@ -1,10 +1,11 @@
 package com.atasoft.objects;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.math.*;
 import com.atasoft.helpers.*;
+import com.badlogic.gdx.*;
+import com.badlogic.gdx.math.*;
 
 public class Vehicle {
-	public static final int TYPE_PICKUP = 0;
+	public static final int TYPE_EMPTY = 0; //Used as place holder in vehicle index
+	public static final int TYPE_PICKUP = 1;
 	//yada yada
 	
 	//----------changed externally
@@ -20,32 +21,25 @@ public class Vehicle {
 	//----------getter/setter action
 	private boolean isSelected = false;
 	private int vinNumber;
-	private int arrIndex;
 	private Vector3 sPos;
 	
+	public Vehicle() {
+		this.vehType = TYPE_EMPTY;
+	}
+	
+	//Set Position and Heading.  Called by Vehicle Manager for spawn / movement
 	public void setPosHead(Vector2 newPos, float newHeading) {
 		this.heading = AtaMathUtils.cageEuler(newHeading);
 		this.position = newPos;
 	}
 	
+	//Set on spawn by vehicle manager
 	public void setVinNumber(int vin) {
 		this.vinNumber = vin;
 	}
 	
-	public float getHeading() {
-		return heading;
-	}
-	
 	public int getVinNumber() {
 		return vinNumber;
-	}
-	
-	public void setArrIndex(int ind) {
-		this.arrIndex = ind;
-	}
-	
-	public int getArrIndex() {
-		return arrIndex;
 	}
 	
 	public void setSPos(Vector3 sPos) {
@@ -71,15 +65,6 @@ public class Vehicle {
 	private boolean colChange = false;
 	public void changeColour(boolean change) {
 		this.colChange = change;
-	}
-	
-	private boolean spinning = true;
-	public void spinning(boolean spin){
-		this.spinning = spin;
-	}
-	
-	public boolean isSpinning(){
-		return spinning;
 	}
 	
 	public void die() {

@@ -26,7 +26,7 @@ public class RenderVehicles
 	}
 		
 	public void renderPickup(Pickup truck) {
-		Sprite truckSprite = atlasGen.getVehBody("pickup", truck.getHeading() - 90);
+		Sprite truckSprite = atlasGen.getVehBody("pickup", truck.heading - 90);
 		//Gdx.app.log("renderVeh", String.format("heading: %.2f", truck.getHeading()));
 		truckSprite.setSize(truck.size.x, truck.size.y);
 		

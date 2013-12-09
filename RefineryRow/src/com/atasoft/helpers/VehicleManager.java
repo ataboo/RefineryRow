@@ -6,9 +6,13 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
 import com.atasoft.helpers.*;
 
+//--------------------------------------------------------------------------------
+/* VehicleManager centralizes the vehicle logic and maintains a list of all
+vehicle instances.  It takes calls to create, destroy and move vehicles.  It
+handles all motion physics for vehicles as well. AtaPathFinder will call waypoints
+to Vehicle Manager methods eventually. */
+//--------------------------------------------------------------------------------
 public class VehicleManager {
-	public static final int TYPE_PICKUP = 0;
-	// digger, blah...
 	
 	private RenderVehicles renderVehicles;
 	private Array<Vehicle> vehicles;
@@ -16,6 +20,7 @@ public class VehicleManager {
 	private Vector2 screenSize;
 	private Vehicle selectedV;
 	private float[] vStats;
+	private int availVin = -1;  //this tracks empty vehicle positions in the list
 	
 	public VehicleManager(RenderVehicles renderVehicles) {
 		this.renderVehicles = renderVehicles;
@@ -25,20 +30,23 @@ public class VehicleManager {
 	}
 	
 	public int addVehicle(int type, Vector2 pos, float bearing) {
+		int retVin = -1;
 		switch(type) {
-			case TYPE_PICKUP:
-				makePickup(pos, bearing);
+			case Vehicle.TYPE_PICKUP:
+				retVin = makePickup(pos, bearing);
 				break;
 			default:
-				return -1;
+				break;
 		}
-		return 0;
+		return retVin;
 	}
 	
 	public boolean removeVehicle(int vinNumber) {
 		for(Vehicle v: vehicles) {
-			if (v.getVinNumber() == vinNumber) { 
-				vehicles.removeIndex(v.getArrIndex());
+			if (v.getVinNumber() == vinNumber) {
+				Vehicle emptyV = new Vehicle();
+				emptyV.setVinNumber(vinNumber);
+				vehicles.set(vinNumber, emptyV);
 				v.die();
 				return true;
 			}
@@ -48,15 +56,25 @@ public class VehicleManager {
 	
 	private int makePickup(Vector2 pos, float bearing) {
 		Pickup pickup = new Pickup(pos, bearing);
-		vehicles.add(pickup);
-		pickup.setArrIndex(0);
-		pickup.setVinNumber(vinCount);
-		vinCount++;
+		if(availVin != -1) {
+			vehicles.get(availVin).die();
+			vehicles.set(availVin, pickup);
+			pickup.setVinNumber(availVin);
+		} else {  //If there's no empty placeholder vehicle in the vehicle list make a new entry.
+			vehicles.add(pickup);
+			pickup.setVinNumber(vinCount);  //Set new vin
+			this.vinCount++;
+		}
+		
 		return pickup.getVinNumber();
 	}
 	
-	public void update(float delta) {
+	public void update(float delta) {  //Probably change this to group vehicles by type and send go to renderVehicle at end
+		availVin = -1;
 		for(Vehicle v: vehicles) {
+			if(v.vehType == Vehicle.TYPE_EMPTY) {
+				if(availVin == -1) availVin = v.getVinNumber();
+			}
 			if(v.vehType == Vehicle.TYPE_PICKUP) {
 				if(v.isMoving) moveVehicle(v, delta);
 				renderVehicles.renderPickup((Pickup) v);	
