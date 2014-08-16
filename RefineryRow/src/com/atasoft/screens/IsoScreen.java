@@ -4,8 +4,8 @@ import com.atasoft.helpers.*;
 import com.atasoft.objects.*;
 import com.atasoft.refineryrow.*;
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.math.*;
+import javax.microedition.khronos.opengles.*;
 
 public class IsoScreen implements Screen {
 	RefineryAct game;
